@@ -12,7 +12,16 @@ const requestSchema = new mongoose.Schema({
     date: {
         type: Date,
         default: Date.now
+    },
+    location: {
+        type: String,
+        required: true,
+    },
+    status: {
+        type: String,
+        enum: ['Pending', 'In Progress', 'Completed'],
+        default: 'Pending'
     }
-});
+}, { timestamps: true });
 
 module.exports = mongoose.model('Request', requestSchema);

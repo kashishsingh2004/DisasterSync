@@ -18,5 +18,14 @@ const createRequest = async (req, res) => {
         res.status(400).json({ message: 'Failed to create request', error });
     }
 };
+const getPendingRequests = async (req, res) => {
+    try {
+        const pendingRequests = await Request.find({ status: 'pending' });
+        res.status(200).json(pendingRequests);
+    } catch (error) {
+        res.status(500).json({ message: 'Failed to fetch pending requests', error });
+    }
+};
 
-module.exports = { getAllRequests, createRequest };
+
+module.exports = { getAllRequests, createRequest,getPendingRequests };

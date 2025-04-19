@@ -7,7 +7,6 @@ import { fetchProfiles } from "../../features/profiles/profileSlice";
 
 const UserDashboard = () => {
     const dispatch = useDispatch();
-
     const { requests } = useSelector((state) => state.requests);
     const { news } = useSelector((state) => state.news);
     const { profiles } = useSelector((state) => state.profiles);
@@ -18,9 +17,13 @@ const UserDashboard = () => {
         dispatch(fetchProfiles());
     }, [dispatch]);
 
+    const pendingRequests = requests.filter((req) => req.status === "Pending");
+    const resolvedRequests = requests.filter((req) => req.status === "Resolved");
+
     return (
         <section className="user-dashboard-section">
             <div className="user-dashboard-container">
+
                 {/* Top Navigation */}
                 <div className="top-nav">
                     <div className="topbar-left">User Dashboard</div>
@@ -31,7 +34,7 @@ const UserDashboard = () => {
                     </div>
                 </div>
 
-                {/* Main Header Section */}
+                {/* Header Section */}
                 <div className="resource-header">
                     <div className="resource-info">
                         <div className="resource-icon">
@@ -48,21 +51,45 @@ const UserDashboard = () => {
                     </div>
                 </div>
 
-                {/* Requests Section */}
+                {/* Summary Cards */}
+                <div className="content-wrapper summary-cards">
+                    <div className="summary-card">
+                        <h3>Total Requests</h3>
+                        <p>{requests.length}</p>
+                    </div>
+                    <div className="summary-card">
+                        <h3>Pending</h3>
+                        <p>{pendingRequests.length}</p>
+                    </div>
+                    <div className="summary-card">
+                        <h3>Resolved</h3>
+                        <p>{resolvedRequests.length}</p>
+                    </div>
+                </div>
+
+                {/* Quick Actions */}
+                <div className="content-wrapper quick-actions">
+                    <div className="action-card">📋 View All Requests</div>
+                    <div className="action-card">📰 Add News</div>
+                    <div className="action-card">👥 Manage Profiles</div>
+                </div>
+
+                {/* Requests */}
                 <div className="content-wrapper">
                     <h2 className="section-title">Recent Requests</h2>
                     <div className="requests-container">
-                        {requests.map((req, index) => (
+                        {pendingRequests.map((req, index) => (
                             <div className="request-card" key={index}>
                                 <h3>{req.title}</h3>
                                 <p>{req.description}</p>
+                                <p>{req.location}</p>
                                 <p><small>{new Date(req.date).toLocaleDateString()}</small></p>
                             </div>
                         ))}
                     </div>
                 </div>
 
-                {/* News Section */}
+                {/* News */}
                 <div className="content-wrapper news-section">
                     <h2 className="section-title">Latest News</h2>
                     <div className="news-scroll">
@@ -78,7 +105,20 @@ const UserDashboard = () => {
                     </div>
                 </div>
 
-                {/* Profiles Section */}
+                {/* Announcements */}
+                <div className="content-wrapper announcements-section">
+                    <h2 className="section-title">Announcements</h2>
+                    <div className="news-scroll">
+                        {news.slice(0, 3).map((item, idx) => (
+                            <div className="news-card announcement-card" key={idx}>
+                                <h3>{item.title}</h3>
+                                <p>{item.description.slice(0, 60)}...</p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
+                {/* Profiles */}
                 <div className="content-wrapper">
                     <h2 className="section-title">Profiles</h2>
                     <div className="profiles-scroll">

@@ -11,6 +11,14 @@ export const fetchRequests = createAsyncThunk(
     }
 );
 
+export const fetchPendingRequests = createAsyncThunk(
+    'requests/fetchPendingRequests',
+    async () => {
+        const response = await axios.get('http://localhost:5000/api/requests/pending');
+        return response.data;
+    }
+);
+
 const requestSlice = createSlice({
     name: 'requests',
     initialState: {
@@ -29,6 +37,18 @@ const requestSlice = createSlice({
                 state.requests = action.payload;
             })
             .addCase(fetchRequests.rejected, (state, action) => {
+                state.status = 'failed';
+                state.error = action.error.message;
+            })
+            // Add these lines 👇 for pending requests
+            .addCase(fetchPendingRequests.pending, (state) => {
+                state.status = 'loading';
+            })
+            .addCase(fetchPendingRequests.fulfilled, (state, action) => {
+                state.status = 'succeeded';
+                state.requests = action.payload;
+            })
+            .addCase(fetchPendingRequests.rejected, (state, action) => {
                 state.status = 'failed';
                 state.error = action.error.message;
             });
